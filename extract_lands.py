@@ -38,7 +38,7 @@ def query_cards_with_ids(card_ids):
 
 def write_cards_with_ids_to_file(card_ids):
     all_cards_dict = {}
-    all_lands = query_cards_with_ids(card_ids[0:5])
+    all_lands = query_cards_with_ids(card_ids)
 
     lands_id_dict = card_postprocessing(all_lands)
 

@@ -1,6 +1,6 @@
 ## MTG Piper
 
-Piper is my set of Python tools for scraping *Magic: The Gathering* card information from the Gatherer site.  Be warned it is not particularly robust or stable.  Piper scrapes only English-language text and images of cards; the card output does point out the IDs of corresponding non-English cards however.
+Piper is my set of Python tools for scraping *Magic: The Gathering* card information from the Gatherer site.  Be warned it is not particularly robust.  Piper scrapes only English-language text and images of cards; the card output does point out the IDs of corresponding non-English cards however.
 
 ## Dependencies
 
@@ -11,6 +11,7 @@ Piper is my set of Python tools for scraping *Magic: The Gathering* card informa
 ## Installation
 
 There is no specific installation for Piper itself, however Tutor must be installed globally.
+
 1. Install Node.js and npm.  See the [instructions here](http://www.joyent.com/blog/installing-node-and-npm/).
 2. Clone the Tutor repo.
 3. Install Tutor as a global module: `npm install <path_to_tutor> --global`.  Note that the version of Tutor in the world repository is out-of-date and *will not work*.
