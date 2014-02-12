@@ -1,6 +1,4 @@
 import datetime
-import os
-import itertools
 import logging
 import json
 import re
@@ -11,19 +9,13 @@ import traceback
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 
-# assuming that we're in the same directory as tutor's bin dir
-TUTOR_DIR = os.path.realpath(os.path.dirname(__file__)) 
-TUTOR_PATH = os.path.join(TUTOR_DIR, "bin/tutor")
-
 def _query_tutor(command_parameters):
     """
     :param command_parameters:
     :return: the json-parsed output of the tutor command
     """
 
-    command = [TUTOR_PATH, '--format', 'json'] + command_parameters
-
-    # print "Command", command
+    command = ['tutor', '--format', 'json'] + command_parameters
 
     try:
         return json.loads(subprocess.check_output(command).strip())
@@ -31,6 +23,15 @@ def _query_tutor(command_parameters):
         raise subprocess.CalledProcessError(u'problem with command',
                                             u' '.join(command))
 
+def query_cards_with_ids(card_ids):
+    set_cards = []
+
+    for card_id in card_ids:
+        card = _query_tutor(['card', card_id])
+        card['id'] = card_id
+        set_cards.append(card)
+
+    return set_cards
 
 def query_cards_in_set(set_name):
     """
@@ -41,9 +42,10 @@ def query_cards_in_set(set_name):
     print "Getting set \'" + set_name + "\'..."
 
     start_time = get_time_now()
-    json_card_list = _query_tutor(['set', set_name])
+    set_card_list = _query_tutor(['set', set_name])
+    card_ids = get_ids_from_set_list(set_card_list)
 
-    set_cards = [_query_tutor(['card', card['id']]) for card in json_card_list]
+    set_cards = query_cards_with_ids(card_ids)
 
     end_time = get_time_now()
 
@@ -52,6 +54,16 @@ def query_cards_in_set(set_name):
 
     return set_cards
 
+# group 2 should contain the card ID part of a Gatherer URL.
+url_breaker = re.compile(r"(.*)=(\d+$)")
+
+def get_ids_from_set_list(set_card_list):
+    card_ids = []
+    for card in set_card_list:
+        url_parts = url_breaker.match(card['gatherer_url'])
+        card_ids.append(url_parts.group(2))
+
+    return card_ids
 
 def query_all_sets():
     """
@@ -80,19 +92,10 @@ def write_cards_from_sets_to_file(target_sets):
 
     return all_errored_cards
 
-url_breaker = re.compile(r"(.*)=(\d+$)")
-
 def card_postprocessing(set_cards):
     errored_cards = []
     set_id_dict = {}
     set_collector_num_dict = {}
-    set_land_count = {
-        'Plains': 0,
-        'Island': 0,
-        'Swamp': 0,
-        'Forest': 0,
-        'Mountain': 0
-    }
 
     for card in set_cards:
         cardname = card['name']

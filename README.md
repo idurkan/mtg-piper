@@ -12,7 +12,8 @@ Piper is my set of Python tools for scraping *Magic: The Gathering* card informa
 
 There is no specific installation for Piper itself, however Tutor must be installed globally.
 1. Install Node.js and npm.  See the [instructions here](http://www.joyent.com/blog/installing-node-and-npm/).
-2. Clone the Tutor repo and install Tutor as a global tool: `npm install tutor --global`
+2. Clone the Tutor repo.
+3. Install Tutor as a global module: `npm install <path_to_tutor> --global`.  Note that the version of Tutor in the world repository is out-of-date and *will not work*.
 
 ## Instructions
 
